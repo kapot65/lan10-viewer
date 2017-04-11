@@ -6,6 +6,6 @@
 
 import {Graph} from './graph.js';
 
-let graph = new Graph("svg");
+let graph = new Graph("#draggable");
 graph.drawGraph();
 graph.print();

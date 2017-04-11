@@ -17,9 +17,11 @@
   "devDependencies": {
     "@types/d3": "^4.7.0",
     "@types/jquery": "^2.0.41",
+    "@types/plotly.js": "^1.22.0",
+    "bower": "^1.8.0",
     "browser-sync": "^2.18.8",
     "gulp": "^3.9.1",
-    "gulp-jspm-build": "0.0.15",
+    "gulp-jspm": "^0.5.13",
     "gulp-less": "^3.3.0",
     "gulp-typescript": "^3.1.6",
     "jspm": "^0.16.53",
@@ -32,8 +34,8 @@
     },
     "dependencies": {
       "d3": "npm:d3@^4.7.4",
-      "jquery": "npm:jquery@^3.2.1",
-      "plotly.js": "npm:plotly.js@1.6.3"
+      "jquery": "npm:jquery@2.1.0",
+      "mapbox-gl": "npm:mapbox-gl@^0.35.0"
     },
     "devDependencies": {
       "typescript": "npm:typescript@^2.0.7"

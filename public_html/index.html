@@ -5,31 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>jQuery UI Draggable - Default functionality</title>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="/resources/demos/style.css">
+    <link rel="stylesheet" href="css/graph.css">
     <style>
-    #draggable { width: 50%; height: 150px; padding: 0.5em; }
+    #draggable { width: 50%; height: 50%; padding: 0.5em; }
     </style>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     
     <script>
     $( function() {
+      $( "#draggable" ).resizable();
       $( "#draggable" ).draggable();
     } );
     </script>
     
     <script src="jspm_packages/system.js"></script>
     <script src="config.js"></script>
-    <script>
-        System.import('js/main.js');
-    </script>
+    <script src="js/main.bundle.js"></script>
+    
     
 </head>
 <body>
     <div id="draggable" class="ui-widget-content">
-        <svg width="960" height="500"></svg>
-         <div id="myDiv" style="width: 480px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
-        <p>Drag me around</p>
+        <div id="myDiv"></div> 
     </div> 
+    
+    <script>
+        System.import('js/main.js');
+    </script>
 </body>
 </html>
