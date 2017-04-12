@@ -9,11 +9,11 @@ import $ from 'jquery';
 import Plotly = require("plotly.js");
 import d3 = require("d3");
 
-
 class Graph {
-    selector: string;
-    svg_jq: any;
-    svg_id: string;
+    
+    protected static id: number = 0;
+    private plot_id: string;
+    private selector: string;
     x: any;
     y: any;
     svg: any;
@@ -22,9 +22,35 @@ class Graph {
     height: number;
     
     constructor(selector: string) {
-        
         this.selector = selector;
-        this.svg_id = "graph_svg";
+        
+        this.plot_id = "plot_" + Graph.id;
+        Graph.id += 1;
+        
+        this.margin = {top: 20, right: 20, bottom: 30, left: 50};
+        
+        d3.select(this.selector).append('div').attr('id', this.plot_id)
+        .style('width', '100%')
+        .style('height', '100%');
+        
+        
+        $(this.selector + " > div.ui-resizable-handle").mousedown( 
+            function () {
+                //$('#' + this.plot_id).hide();
+            }.bind(this));
+        
+        $(this.selector + " > div.ui-resizable-handle").mouseup( 
+            function () {
+                //$('#' + this.plot_id).show();
+                this.replot();
+            }.bind(this));
+        
+        var plot = Plotly.newPlot(this.plot_id, [{
+            x: ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
+            y: [1, 3, 6]//,
+            //type: 'scatter'
+        }]);
+        
         /*
         this.svg = d3.select(this.selector)
             .append("div")
@@ -38,41 +64,35 @@ class Graph {
             .classed("svg-content-responsive", true);
             
         this.svg_jq = $("#" + this.svg_id);
-        this.margin = {top: 20, right: 20, bottom: 30, left: 50};*/
-        var s = $(this.selector);
-        s.on('resize', this.replot);
+        */
+        //var s = $(this.selector);
+        //s.resize(this.replot);
     };
     
     replot() {
-        alert(111);
-        this.width = +this.svg_jq.outerWidth() - this.margin.left 
-                     - this.margin.right,
-        this.height = +this.svg_jq.outerHeight() - this.margin.top 
-                      - this.margin.bottom;
-                      
-        this.x = d3.scaleTime()
-            .rangeRound([0, this.width]);
+        this.width = +$(this.selector).width() 
+        this.height = +$(this.selector).height()
+        
+        $('#' + this.plot_id).width(this.width);
+        $('#' + this.plot_id).height(this.height);
 
-        this.y = d3.scaleLinear()
-            .rangeRound([this.height, 0]);
-            
         var update = {
-            width: 800,  // or any new width
-            height: 500  // " "
-          };
+            width: this.width,
+            height: this.height
+        };
 
-        Plotly.relayout('myDiv', update);
-                       
+        Plotly.relayout(this.plot_id, update);              
     };
     
     drawGraph() {
         
+        /*
         var plot = Plotly.newPlot("myDiv", [{
             x: ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
             y: [1, 3, 6]//,
             //type: 'scatter'
         }]);
-        
+        */
         
         /*
         var g = this.svg.append("g").attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
