@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 
-import {Graph} from './graph.js';
+import {Graph} from './graph';
+import {IndexTree} from './index_tree'
 
 let graph = new Graph("#draggable");
-graph.drawGraph();
-graph.print();
+let index_tree = new IndexTree("#index_tree");

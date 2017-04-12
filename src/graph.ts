@@ -5,7 +5,7 @@
  */
 "use strict";
 
-import $ from 'jquery';
+import 'jquery';
 import Plotly = require("plotly.js");
 import d3 = require("d3");
 
@@ -14,14 +14,13 @@ class Graph {
     protected static id: number = 0;
     private plot_id: string;
     private selector: string;
-    x: any;
-    y: any;
-    svg: any;
-    margin: any;
-    width: number;
-    height: number;
+    private margin: any;
+    private width: number;
+    private height: number;
+    private traces: any;
     
     constructor(selector: string) {
+
         this.selector = selector;
         
         this.plot_id = "plot_" + Graph.id;
@@ -32,41 +31,25 @@ class Graph {
         d3.select(this.selector).append('div').attr('id', this.plot_id)
         .style('width', '100%')
         .style('height', '100%');
+      
+        this.bindResizeEvent();
+        
+        var numbers = []
+        for (let i = 0, max = 100; i < max; i++) {
+            numbers[numbers.length] = Math.random();
+        }
         
         
-        $(this.selector + " > div.ui-resizable-handle").mousedown( 
-            function () {
-                //$('#' + this.plot_id).hide();
-            }.bind(this));
+        this.traces = [{
+            y: numbers,
+            type: 'bar',
+            marker: {
+                color: 'blue',
+            },
+            legend: ""
+        }]
         
-        $(this.selector + " > div.ui-resizable-handle").mouseup( 
-            function () {
-                //$('#' + this.plot_id).show();
-                this.replot();
-            }.bind(this));
-        
-        var plot = Plotly.newPlot(this.plot_id, [{
-            x: ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
-            y: [1, 3, 6]//,
-            //type: 'scatter'
-        }]);
-        
-        /*
-        this.svg = d3.select(this.selector)
-            .append("div")
-            .classed("svg-container", true) //container class to make it responsive
-            .append("svg")
-            //responsive SVG needs these 2 attributes and no width and height attr
-            //.attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("viewBox", "0 0 600 400")
-            //class to make it responsive
-            .attr("id", this.svg_id)
-            .classed("svg-content-responsive", true);
-            
-        this.svg_jq = $("#" + this.svg_id);
-        */
-        //var s = $(this.selector);
-        //s.resize(this.replot);
+        this.changeData();
     };
     
     replot() {
@@ -84,78 +67,24 @@ class Graph {
         Plotly.relayout(this.plot_id, update);              
     };
     
-    drawGraph() {
+    protected bindResizeEvent() {
         
-        /*
-        var plot = Plotly.newPlot("myDiv", [{
-            x: ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
-            y: [1, 3, 6]//,
-            //type: 'scatter'
-        }]);
-        */
+        $(this.selector + " > div.ui-resizable-handle").mousedown( 
+            function () {
+                //$('#' + this.plot_id).hide();
+            }.bind(this));
         
-        /*
-        var g = this.svg.append("g").attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-
-        var parseTime = d3.timeParse("%d-%b-%y");
-
-        this.replot();
-
-        var line = d3.line()
-            .x(function(d: any) { return this.x(d.date); }.bind(this))
-            .y(function(d: any) { return this.y(d.close); }.bind(this));
-
-        var set_data = function(error: any, data: any) {
-          if (error) throw error;
-
-          this.x.domain(d3.extent(data, function (d: any) {return d.date;}.bind(this)));
-          this.y.domain(d3.extent(data, function(d: any) { return d.close; }.bind(this)));
-
-          g.append("g")
-              .attr("transform", "translate(0," + this.height + ")")
-              .call(d3.axisBottom(this.x))
-            .select(".domain")
-              .remove();
-
-          g.append("g")
-              .call(d3.axisLeft(this.y))
-            .append("text")
-              .attr("fill", "#000")
-              .attr("transform", "rotate(-90)")
-              .attr("y", 6)
-              .attr("dy", "0.71em")
-              .attr("text-anchor", "end")
-              .text("Price ($)");
-
-          g.append("path")
-              .datum(data)
-              .attr("fill", "none")
-              .attr("stroke", "steelblue")
-              .attr("stroke-linejoin", "round")
-              .attr("stroke-linecap", "round")
-              .attr("stroke-width", 1.5)
-              .attr("d", line);
-        }.bind(this);
-
-        d3.tsv("data.tsv", function(d: any) {
-          d.date = parseTime(d.date);
-          d.close = +d.close;
-          return d;
-        }, set_data);
-        */
+        $(this.selector + " > div.ui-resizable-handle").mouseup( 
+            function () {
+                //$('#' + this.plot_id).show();
+                this.replot();
+            }.bind(this));
+            
     };
     
-    print() {
-        d3.selectAll(this.selector).style("color", "red");
+    protected changeData() {
+        Plotly.newPlot(this.plot_id, this.traces);
     };
 };
 
 export { Graph };
-
-/*
-class B extends A {
-    constructor(name: string) { super(name); }
-    print() {
-        console.log(this.message);
-    }
-};*/
