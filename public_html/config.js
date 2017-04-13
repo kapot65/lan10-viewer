@@ -11,8 +11,10 @@ System.config({
     "bootstrap-treeview": "bower_components/bootstrap-treeview/dist/bootstrap-treeview.min.js",
     "d3": "npm:d3@4.7.4",
     "jquery": "npm:jquery@2.1.0",
+    "js-md5": "npm:js-md5@0.4.2",
     "mapbox-gl": "npm:mapbox-gl@0.35.0",
-    "plotly.js": "bower_components/plotly.js/dist/plotly-basic.min.js",
+    "md5": "npm:md5@2.2.1",
+    "plotly.js": "bower_components/plotly.js/dist/plotly.min.js",
     "randomcolor": "bower_components/randomcolor/randomColor.js",
     "taffydb": "npm:taffydb@2.7.3",
     "typescript": "npm:typescript@2.3.0",
@@ -561,7 +563,15 @@ System.config({
     "npm:inherits@2.0.1": {
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
+    "npm:is-buffer@1.1.5": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.1"
+    },
     "npm:jquery@2.1.0": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:js-md5@0.4.2": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.1",
+      "crypto": "github:jspm/nodelibs-crypto@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:levn@0.3.0": {
@@ -605,6 +615,13 @@ System.config({
       "vector-tile": "npm:vector-tile@1.3.0",
       "vt-pbf": "npm:vt-pbf@2.1.2",
       "webworkify": "npm:webworkify@1.4.0"
+    },
+    "npm:md5@2.2.1": {
+      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "buffer": "github:jspm/nodelibs-buffer@0.1.1",
+      "charenc": "npm:charenc@0.0.2",
+      "crypt": "npm:crypt@0.0.2",
+      "is-buffer": "npm:is-buffer@1.1.5"
     },
     "npm:miller-rabin@4.0.0": {
       "bn.js": "npm:bn.js@4.11.6",
@@ -706,9 +723,6 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "crypto": "github:jspm/nodelibs-crypto@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:randomcolor@0.4.4": {
-      "fs": "github:jspm/nodelibs-fs@0.1.2"
     },
     "npm:readable-stream@1.0.34": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",

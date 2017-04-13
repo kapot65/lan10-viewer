@@ -10,6 +10,7 @@ import 'randomcolor'
 import Plotly = require("plotly.js");
 import d3 = require("d3");
 import {IndexDB} from  './index_db'
+import {md5} from './md5';
 
 class Graph {
     
@@ -20,6 +21,7 @@ class Graph {
     private height: number;
     private traces: any = [];
     private index_db: IndexDB;
+    private layout: any = {barmode: "overlay"};
     
     constructor(selector: string, index_db: IndexDB) {
         this.selector = selector;
@@ -39,6 +41,7 @@ class Graph {
             numbers[numbers.length] = Math.random();
         }
         
+        $(window).on('redraw_colors', this.colorIds.bind(this))
         $(window).on('point_selected', this.plot_point.bind(this));
         $(window).on('point_unselected', this.unplot_point.bind(this))
         
@@ -61,14 +64,23 @@ class Graph {
     };
     
     protected plot_point(event: any, path: string) {
+        
         var hist = this.index_db.getHist(path);
-            
+        var color = randomColor();    
+        
+        var x = [];
+        for (var i = 0; i < 500; i ++) {
+                x[i] = Math.random();
+        }
+        
         this.traces[this.traces.length] = {
             y: hist.hist,
             x: hist.bins,
             type: 'bar',
+            opacity: 0.7,
+            coloring: 'lines',
             marker: {
-                color: randomColor(),
+                color: color
             },
             label: path
         }
@@ -106,9 +118,18 @@ class Graph {
             
     };
     
+    protected colorIds() {
+        setTimeout(function() {
+            for (let params of this.traces) {
+                $('#' + md5(params.label)).css('background-color',  
+                params.marker.color);
+            }
+        }.bind(this), 50)
+    }
+    
     
     protected changeData() {
-        Plotly.newPlot(this.plot_id, (this.traces));
+        Plotly.newPlot(this.plot_id, (this.traces), this.layout);
     };
 };
 

@@ -7,6 +7,7 @@
 import 'jquery';
 import 'bootstrap-treeview';
 import {IndexDB} from  './index_db'
+import {md5} from './md5';
 
 interface PathNode {
     text: string,
@@ -38,9 +39,24 @@ class IndexTree {
             multiSelect: true
         });
         
-        $(selector).on('nodeSelected', function(event, data) {
-            
+        $(selector).on('nodeExpanded', function() {
+            $(window).trigger('redraw_colors')
+        });
+        
+        $(selector).on('nodeCollapsed', function() {
+            $(window).trigger('redraw_colors')
+        });
+        
+        $(selector).on('nodeUnselected', function(event, data) {
+            $(window).trigger('redraw_colors')
             if (typeof (data.path) !== "undefined") {
+                $(window).trigger('point_unselected', [data.path]);
+            }
+        });
+        
+        $(selector).on('nodeSelected', function(event, data) {
+            $(window).trigger('redraw_colors')
+            if (typeof (data.path) !== "undefined") {   
                 $(window).trigger('point_selected', [data.path]);
             }
 
@@ -48,6 +64,7 @@ class IndexTree {
         
         $(selector).on('nodeUnselected', function(event, data) {
             if (typeof (data.path) !== "undefined") {
+                $(window).trigger('redraw_colors')
                 $(window).trigger('point_unselected', [data.path]);
             }
         });
@@ -76,7 +93,7 @@ class IndexTree {
                 
                 if ( j == chain.length - 1) {
                     newNode = currentNode[k] = { 
-                        text: wantedNode,
+                        text: this.createColorBox(path) + wantedNode,
                         path: path
                     }
                     
@@ -90,6 +107,10 @@ class IndexTree {
                 }
             }
         }
+    }
+    
+    protected createColorBox(path: string) {
+        return '<b id="' + md5(path) + '">&#160&#160&#160&#160</b> ';
     }
     
     protected pathsToTree(paths: Array<string>) {

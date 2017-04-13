@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lan10-12PCI points viewer</title>
     
+    <link rel="stylesheet" href="css/tree_view.css">
     <link rel="stylesheet" href="css/graph.css">
-    <link rel="stylesheet" href="css/page.css">
     <style>
     #draggable { width: 50%; height: 50%; padding: 0.5em; }
     </style>
@@ -22,18 +22,24 @@
     
     <script src="jspm_packages/system.js"></script>
     <script src="config.js"></script>
+    
+    <!-- Либы, которые не подключаются через JSPM -->
     <script src="bower_components/randomcolor/randomColor.js"></script>
+    <script src="bower_components/plotly.js/dist/plotly-basic.min.js"></script>
+    <script src="bower_components/plotly.js/dist/plotly.min.js"></script>
+    
     <!--<script src="js/main.bundle.js"></script>-->
     
     
 </head>
 <body>
+    <div id='myDiv'></div>
     <div class="container-fluid" style="height:100%;">
 	<div class="row">
-		<div class="col-md-2" style="height:100%;">
+		<div class="col-md-3" style="height:100%;">
                     <div id="index_tree"></div>
 		</div>
-		<div class="col-md-10">
+		<div class="col-md-9">
                     <div id="draggable" class="ui-widget-content"></div>
 		</div>
 	</div>

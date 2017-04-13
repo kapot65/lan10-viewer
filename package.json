@@ -29,6 +29,7 @@
     "gulp-typescript": "^3.1.6",
     "jspm": "^0.16.53",
     "plotly.js": "^1.6.3",
+    "ts-md5": "^1.2.0",
     "typescript": "^2.2.2"
   },
   "jspm": {
@@ -39,9 +40,12 @@
       "bootstrap-treeview": "npm:bootstrap-treeview@^1.2.0",
       "d3": "npm:d3@^4.7.4",
       "jquery": "npm:jquery@2.1.0",
+      "js-md5": "npm:js-md5@^0.4.2",
       "mapbox-gl": "npm:mapbox-gl@^0.35.0",
+      "md5": "npm:md5@^2.2.1",
       "randomcolor": "npm:randomcolor@^0.4.4",
-      "taffydb": "npm:taffydb@^2.7.3"
+      "taffydb": "npm:taffydb@^2.7.3",
+      "ts-md5": "npm:ts-md5@^1.2.0"
     },
     "devDependencies": {
       "typescript": "npm:typescript@^2.0.7"
