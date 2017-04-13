@@ -6,27 +6,27 @@
 "use strict";
 
 import 'jquery';
+import 'randomcolor'
 import Plotly = require("plotly.js");
 import d3 = require("d3");
+import {IndexDB} from  './index_db'
 
 class Graph {
     
     protected static id: number = 0;
     private plot_id: string;
     private selector: string;
-    private margin: any;
     private width: number;
     private height: number;
-    private traces: any;
+    private traces: any = [];
+    private index_db: IndexDB;
     
-    constructor(selector: string) {
-
+    constructor(selector: string, index_db: IndexDB) {
         this.selector = selector;
+        this.index_db = index_db;
         
         this.plot_id = "plot_" + Graph.id;
         Graph.id += 1;
-        
-        this.margin = {top: 20, right: 20, bottom: 30, left: 50};
         
         d3.select(this.selector).append('div').attr('id', this.plot_id)
         .style('width', '100%')
@@ -39,15 +39,8 @@ class Graph {
             numbers[numbers.length] = Math.random();
         }
         
-        
-        this.traces = [{
-            y: numbers,
-            type: 'bar',
-            marker: {
-                color: 'blue',
-            },
-            legend: ""
-        }]
+        $(window).on('point_selected', this.plot_point.bind(this));
+        $(window).on('point_unselected', this.unplot_point.bind(this))
         
         this.changeData();
     };
@@ -67,6 +60,37 @@ class Graph {
         Plotly.relayout(this.plot_id, update);              
     };
     
+    protected plot_point(event: any, path: string) {
+        var hist = this.index_db.getHist(path);
+            
+        this.traces[this.traces.length] = {
+            y: hist.hist,
+            x: hist.bins,
+            type: 'bar',
+            marker: {
+                color: randomColor(),
+            },
+            label: path
+        }
+
+        this.changeData();
+    }
+    
+    protected unplot_point(event: any, path: string) {
+        
+        var to_delete: any = [];
+        for (let key in this.traces) {
+            if ( this.traces[key].label == path) {
+                to_delete[to_delete.length] = Number(key);
+            }
+        }
+        
+        for (var i = to_delete.length -1; i >= 0; i--)
+            this.traces.splice(to_delete[i], 1);
+            
+        this.changeData();
+    }
+    
     protected bindResizeEvent() {
         
         $(this.selector + " > div.ui-resizable-handle").mousedown( 
@@ -82,8 +106,9 @@ class Graph {
             
     };
     
+    
     protected changeData() {
-        Plotly.newPlot(this.plot_id, this.traces);
+        Plotly.newPlot(this.plot_id, (this.traces));
     };
 };
 

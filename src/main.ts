@@ -6,6 +6,9 @@
 
 import {Graph} from './graph';
 import {IndexTree} from './index_tree'
+import {IndexDB} from  './index_db'
 
-let graph = new Graph("#draggable");
-let index_tree = new IndexTree("#index_tree");
+let index_db = new IndexDB();
+let graph = new Graph("#draggable", index_db);
+let index_tree = new IndexTree("#index_tree", index_db);
+

@@ -13,6 +13,7 @@ System.config({
     "jquery": "npm:jquery@2.1.0",
     "mapbox-gl": "npm:mapbox-gl@0.35.0",
     "plotly.js": "bower_components/plotly.js/dist/plotly-basic.min.js",
+    "randomcolor": "bower_components/randomcolor/randomColor.js",
     "taffydb": "npm:taffydb@2.7.3",
     "typescript": "npm:typescript@2.3.0",
     "github:jspm/nodelibs-assert@0.1.0": {
@@ -705,6 +706,9 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "crypto": "github:jspm/nodelibs-crypto@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:randomcolor@0.4.4": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2"
     },
     "npm:readable-stream@1.0.34": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",

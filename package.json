@@ -19,6 +19,7 @@
     "@types/d3": "^4.7.0",
     "@types/jquery": "^2.0.41",
     "@types/plotly.js": "^1.22.0",
+    "@types/randomcolor": "^0.4.3",
     "bootstrap-treeview": "^1.2.0",
     "bower": "^1.8.0",
     "browser-sync": "^2.18.8",
@@ -39,6 +40,7 @@
       "d3": "npm:d3@^4.7.4",
       "jquery": "npm:jquery@2.1.0",
       "mapbox-gl": "npm:mapbox-gl@^0.35.0",
+      "randomcolor": "npm:randomcolor@^0.4.4",
       "taffydb": "npm:taffydb@^2.7.3"
     },
     "devDependencies": {
