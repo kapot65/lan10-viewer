@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lan10-12PCI points viewer</title>
     
-    <link rel="stylesheet" href="css/tree_view.css">
     <link rel="stylesheet" href="css/graph.css">
-    <style>
-    #draggable { width: 50%; height: 50%; padding: 0.5em; }
-    </style>
     
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     
@@ -18,7 +14,9 @@
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <script src="bower_components/bootstrap-treeview/dist/bootstrap-treeview.min.js"></script>
-    <link rel="stylesheet" href="bower_components/bootstrap-treeview/dist/bootstrap-treeview.min.css"> 
+    <link rel="stylesheet" href="bower_components/bootstrap-treeview/dist/bootstrap-treeview.min.css">
+    <script src="bower_components/jquery-jsonview/dist/jquery.jsonview.js"></script>
+    <link rel="stylesheet" href="bower_components/jquery-jsonview/dist/jquery.jsonview.css"> 
     
     <script src="jspm_packages/system.js"></script>
     <script src="config.js"></script>
@@ -26,36 +24,35 @@
     <!-- Либы, которые не подключаются через JSPM -->
     <script src="bower_components/randomcolor/randomColor.js"></script>
     <script src="bower_components/plotly.js/dist/plotly-basic.min.js"></script>
-    <script src="bower_components/plotly.js/dist/plotly.min.js"></script>
+    <script src="bower_components/url-join/lib/url-join.js"></script>
+    
+    <link rel="stylesheet" href="css/index.css">
     
     <!--<script src="js/main.bundle.js"></script>-->
-    
-    
 </head>
 <body>
-    <div id='myDiv'></div>
-    <div class="container-fluid" style="height:100%;">
+    <div class="container">
 	<div class="row">
-		<div class="col-md-3" style="height:100%;">
-                    <div id="index_tree"></div>
-		</div>
-		<div class="col-md-9">
-                    <div id="draggable" class="ui-widget-content"></div>
-		</div>
+            <div class="col-md-3 no-float">
+                    <div id="db_view" data-host="{{host}}" data-port="{{port}}"></div>
+                    <div id="index_tree" class='pre-scrollable'></div>
+                    <div id="jsonview" class='pre-scrollable'></div>
+            </div>
+            <div class="col-md-9 no-float">
+                <div id="plot" class="ui-widget-content" style='height:95vh; width: 100%'></div>
+            </div>
 	</div>
     </div>
-    
     <script>
         {System.import('js/main.js');}
-        
     </script>
-    <script>
-    $( function() {
-      $( "#draggable" ).resizable();
-      $( "#draggable" ).draggable({containment: "parent"});
-      $( "#draggable" ).selectable();
-    } );
-
+    <script>       
+    $( function() {  
+      $( "#plot" ).resizable();
+      $( "#plot" ).draggable({containment: "parent"});
+      $( "#plot" ).selectable();
+      $( "#db_view" ).progressbar();
+    });
     </script>
 </body>
 </html>

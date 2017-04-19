@@ -21,7 +21,7 @@ class Graph {
     private height: number;
     private traces: any = [];
     private index_db: IndexDB;
-    private layout: any = {barmode: "overlay"};
+    private layout: any = { barmode: "overlay" };
     
     constructor(selector: string, index_db: IndexDB) {
         this.selector = selector;
@@ -42,8 +42,9 @@ class Graph {
         }
         
         $(window).on('redraw_colors', this.colorIds.bind(this))
-        $(window).on('point_selected', this.plot_point.bind(this));
+        $(window).on('point_selected', this.request_point.bind(this));
         $(window).on('point_unselected', this.unplot_point.bind(this))
+        $(window).on('point_acquired', this.plot_point.bind(this))
         
         this.changeData();
     };
@@ -63,16 +64,16 @@ class Graph {
         Plotly.relayout(this.plot_id, update);              
     };
     
-    protected plot_point(event: any, path: string) {
-        
-        var hist = this.index_db.getHist(path);
-        var color = randomColor();    
-        
-        var x = [];
-        for (var i = 0; i < 500; i ++) {
-                x[i] = Math.random();
-        }
-        
+    protected request_point(event: any, path: string) {
+        this.index_db.getHist(path);
+    }
+    
+    protected plot_point(event: any, 
+                         hist: {bins: number[], 
+                                hist: number[]},
+                         path: string) {
+                                         
+        var color = randomColor();
         this.traces[this.traces.length] = {
             y: hist.hist,
             x: hist.bins,
@@ -84,7 +85,6 @@ class Graph {
             },
             label: path
         }
-
         this.changeData();
     }
     

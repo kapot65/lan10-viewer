@@ -1,3 +1,6 @@
+.spyproject
+__pycache__
+public_html/js/
 jspm_packages
 bower_components
 node_modules

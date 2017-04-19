@@ -7,8 +7,10 @@
 import {Graph} from './graph';
 import {IndexTree} from './index_tree'
 import {IndexDB} from  './index_db'
+import {MetaView} from  './meta_view'
 
-let index_db = new IndexDB();
-let graph = new Graph("#draggable", index_db);
+let index_db = new IndexDB("#db_view");
+let graph = new Graph("#plot", index_db);
 let index_tree = new IndexTree("#index_tree", index_db);
+let meta_view = new MetaView("#jsonview", index_db);
 

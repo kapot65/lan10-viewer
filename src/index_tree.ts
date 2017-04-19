@@ -26,49 +26,14 @@ class IndexTree {
     private tree: PathNode[] = [];
     
     constructor(selector: string, index_db: IndexDB) {
+        
         this.selector = selector;
         this.index_db = index_db;
         
-        var points = index_db.getPoints();
-        this.pathsToTree(points);
         
-        $(selector).treeview({
-            data: this.tree,
-            collapseIcon: "glyphicon glyphicon-folder-open",
-            expandIcon: "glyphicon glyphicon-folder-close",
-            multiSelect: true
-        });
-        
-        $(selector).on('nodeExpanded', function() {
-            $(window).trigger('redraw_colors')
-        });
-        
-        $(selector).on('nodeCollapsed', function() {
-            $(window).trigger('redraw_colors')
-        });
-        
-        $(selector).on('nodeUnselected', function(event, data) {
-            $(window).trigger('redraw_colors')
-            if (typeof (data.path) !== "undefined") {
-                $(window).trigger('point_unselected', [data.path]);
-            }
-        });
-        
-        $(selector).on('nodeSelected', function(event, data) {
-            $(window).trigger('redraw_colors')
-            if (typeof (data.path) !== "undefined") {   
-                $(window).trigger('point_selected', [data.path]);
-            }
-
-        });
-        
-        $(selector).on('nodeUnselected', function(event, data) {
-            if (typeof (data.path) !== "undefined") {
-                $(window).trigger('redraw_colors')
-                $(window).trigger('point_unselected', [data.path]);
-            }
-        });
-        
+        index_db.updatePoints();
+        $(window).on('paths_updated', this.pathsToTree.bind(this))
+            
     }
     
     protected addFileToTree(path: string) {
@@ -92,9 +57,16 @@ class IndexTree {
                 var newNode;
                 
                 if ( j == chain.length - 1) {
+                    var selectable: boolean = false;
+                    
+                    if(path.endsWith('.rsb') || path.endsWith('.df')) {
+                        selectable = true;
+                    }
+                    
                     newNode = currentNode[k] = { 
                         text: this.createColorBox(path) + wantedNode,
-                        path: path
+                        path: path,
+                        selectable: selectable
                     }
                     
                 } else {
@@ -113,10 +85,46 @@ class IndexTree {
         return '<b id="' + md5(path) + '">&#160&#160&#160&#160</b> ';
     }
     
-    protected pathsToTree(paths: Array<string>) {
+    protected pathsToTree(event: any, paths: Array<string>) {
         for (let path of paths) {
             this.addFileToTree(path);
         }
+        
+        $(this.selector).treeview({
+            data: this.tree,
+            collapseIcon: "glyphicon glyphicon-folder-open",
+            expandIcon: "glyphicon glyphicon-folder-close",
+            multiSelect: true
+        });
+        
+        $(this.selector).on('nodeExpanded', function() {
+            $(window).trigger('redraw_colors')
+        });
+        
+        $(this.selector).on('nodeCollapsed', function() {
+            $(window).trigger('redraw_colors')
+        });
+        
+        $(this.selector).on('nodeUnselected', function(event, data) {
+            $(window).trigger('redraw_colors')
+            if (typeof (data.path) !== "undefined") {
+                $(window).trigger('point_unselected', [data.path]);
+            }
+        });
+        
+        $(this.selector).on('nodeSelected', function(event, data) {
+            $(window).trigger('redraw_colors')
+            if (typeof (data.path) !== "undefined") {   
+                $(window).trigger('point_selected', [data.path]);
+            }
+        });
+        
+        $(this.selector).on('nodeUnselected', function(event, data) {
+            if (typeof (data.path) !== "undefined") {
+                $(window).trigger('redraw_colors')
+                $(window).trigger('point_unselected', [data.path]);
+            }
+        });
     }
 }
 

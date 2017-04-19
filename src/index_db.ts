@@ -3,6 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+import 'jquery';
+import 'jquery-ui';
+import * as io from 'socket.io-client';
+import 'url-join';
  
  var testPaths: string[] = [
     'test_session/test_group/set_1/point1.df',
@@ -54,36 +59,60 @@ var testMeta: { [key:string]:{}; } = {
     }
 }
  
- 
 class IndexDB {
+    private host: string;
+    private port: number;
+    private pb_selector: string;
     private points: Array< {path: Array<string>, 
                             hist: Array<number>, 
                             bins: Array<number>} >
     
-    constructor() {  
+    constructor(pb_selector: string) { 
+                
+        this.pb_selector = pb_selector;
+        this.host = $(this.pb_selector).data('host');
+        
+        if(this.host === '{{host}}')
+            this.host = 'localhost';
+        
+        var port = $(this.pb_selector).data('port');
+        if( port === '{{port}}') {
+            this.port = 5555;
+        } else {
+            this.port = port;
+        }
+        
+        var socket = io.connect(this.makeUrl());
+        
+        if(pb_selector) {
+            socket.on('progress', function(data: {val: number}){
+                $(pb_selector).progressbar("option", "value", data.val)
+            });
+        }
     };
     
-    /**
-     * @todo заменить на реальную функцию
-     */
-    getPoints(): string[] {
-        return testPaths;
+    updatePoints() {
+        $.getJSON(urljoin(this.makeUrl(), 'files'), function(data) {
+            $(window).trigger('paths_updated', [data]);
+        });
     }
     
-    /**
-     * @todo заменить на реальную функцию
-     */
-    getHist(path: string): {hist: number[], bins: number[]} {
-        return testHist[path];
+    getHist(path: string) {
+        $.getJSON(urljoin(this.makeUrl(), 'hist', path), function(data) {
+            $(window).trigger('point_acquired', [data, path]);
+        });
     }
     
-    /**
-     * @todo заменить на реальную функцию
-     */
-    getMeta(path: string): {} {
-        return testMeta[path];
+    getMeta(path: string) {
+        
+        $.getJSON(urljoin(this.makeUrl(), 'meta', path), function(data) {
+            $(window).trigger('meta_acquired', [data, path]);
+        });
     }
     
+    private makeUrl() {
+        return 'http://' + this.host + ':' + this.port;
+    }
 }
 
 export { IndexDB };

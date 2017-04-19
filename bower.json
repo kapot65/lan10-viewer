@@ -12,7 +12,9 @@
     "plotly.js": "1.22.0",
     "bootstrap-treeview": "^1.2.0",
     "randomcolor": "^0.4.4",
-    "js-md5": "^2.7.0"
+    "js-md5": "^2.7.0",
+    "url-join": "^2.0.1",
+    "jquery-jsonview": "jsonview#^1.2.3"
   },
   "devDependencies": {}
 }
