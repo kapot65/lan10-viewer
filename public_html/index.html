@@ -8,27 +8,24 @@
     <link rel="stylesheet" href="css/graph.css">
     
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    
-    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.min.css">
     <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.min.css">
+    
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    
     <script src="bower_components/bootstrap-treeview/dist/bootstrap-treeview.min.js"></script>
     <link rel="stylesheet" href="bower_components/bootstrap-treeview/dist/bootstrap-treeview.min.css">
+    
     <script src="bower_components/jquery-jsonview/dist/jquery.jsonview.js"></script>
     <link rel="stylesheet" href="bower_components/jquery-jsonview/dist/jquery.jsonview.css"> 
     
+
     <script src="jspm_packages/system.js"></script>
     <script src="config.js"></script>
-    
-    <!-- Либы, которые не подключаются через JSPM -->
-    <script src="bower_components/randomcolor/randomColor.js"></script>
-    <script src="bower_components/plotly.js/dist/plotly-basic.min.js"></script>
-    <script src="bower_components/url-join/lib/url-join.js"></script>
-    
+
     <link rel="stylesheet" href="css/index.css">
     
-    <!--<script src="js/main.bundle.js"></script>-->
 </head>
 <body>
     <div class="container">
@@ -45,14 +42,6 @@
     </div>
     <script>
         {System.import('js/main.js');}
-    </script>
-    <script>       
-    $( function() {  
-      $( "#plot" ).resizable();
-      $( "#plot" ).draggable({containment: "parent"});
-      $( "#plot" ).selectable();
-      $( "#db_view" ).progressbar();
-    });
     </script>
 </body>
 </html>

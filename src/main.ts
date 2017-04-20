@@ -4,10 +4,18 @@
  * and open the template in the editor.
  */
 
+import 'jquery';
+import 'bootstrap'
+
 import {Graph} from './graph';
 import {IndexTree} from './index_tree'
 import {IndexDB} from  './index_db'
 import {MetaView} from  './meta_view'
+
+$( "#plot" ).resizable();
+$( "#plot" ).draggable({containment: "parent"});
+$( "#plot" ).selectable();
+$( "#db_view" ).progressbar();
 
 let index_db = new IndexDB("#db_view");
 let graph = new Graph("#plot", index_db);

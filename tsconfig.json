@@ -6,7 +6,7 @@
     "module": "system",
     "noImplicitAny": false,
     "noEmitOnError": true,
-    "removeComments": false,
+    "removeComments": true,
     "sourceMap": true,
     "declaration": false,
     "noLib": false,

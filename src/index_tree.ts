@@ -6,6 +6,7 @@
 
 import 'jquery';
 import 'bootstrap-treeview';
+import 'remarkable-bootstrap-notify'
 import {IndexDB} from  './index_db'
 import {md5} from './md5';
 
@@ -33,7 +34,19 @@ class IndexTree {
         
         index_db.updatePoints();
         $(window).on('paths_updated', this.pathsToTree.bind(this))
+        
+        $(window).on('point_not_acquired', function(event, nodeId) {
             
+            (<any>$).notify({
+                message: 'Already processing!' 
+            },{
+                type: 'warning'
+            });
+            
+            (<any>$(this.selector)).treeview('unselectNode', 
+            [ nodeId, { silent: true } ]);
+            $(window).trigger('redraw_colors');
+        }.bind(this));
     }
     
     protected addFileToTree(path: string) {
@@ -59,7 +72,8 @@ class IndexTree {
                 if ( j == chain.length - 1) {
                     var selectable: boolean = false;
                     
-                    if(path.endsWith('.rsb') || path.endsWith('.df')) {
+                    if((<any>path).endsWith('.rsb') || 
+                       (<any>path).endsWith('.df')) {
                         selectable = true;
                     }
                     
@@ -90,7 +104,7 @@ class IndexTree {
             this.addFileToTree(path);
         }
         
-        $(this.selector).treeview({
+        (<any>$)(this.selector).treeview({
             data: this.tree,
             collapseIcon: "glyphicon glyphicon-folder-open",
             expandIcon: "glyphicon glyphicon-folder-close",
@@ -113,9 +127,8 @@ class IndexTree {
         });
         
         $(this.selector).on('nodeSelected', function(event, data) {
-            $(window).trigger('redraw_colors')
-            if (typeof (data.path) !== "undefined") {   
-                $(window).trigger('point_selected', [data.path]);
+            if (typeof (data.path) !== "undefined") {
+                $(window).trigger('point_selected', [data.path, data.nodeId]);
             }
         });
         

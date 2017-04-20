@@ -9,12 +9,11 @@
   "dependencies": {
     "jquery": "^3.2.1",
     "jquery-ui": "^1.12.1",
-    "plotly.js": "1.22.0",
     "bootstrap-treeview": "^1.2.0",
-    "randomcolor": "^0.4.4",
     "js-md5": "^2.7.0",
     "url-join": "^2.0.1",
-    "jquery-jsonview": "jsonview#^1.2.3"
+    "jquery-jsonview": "jsonview#^1.2.3",
+    "bootstrap": "^3.3.7"
   },
   "devDependencies": {}
 }

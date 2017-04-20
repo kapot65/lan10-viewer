@@ -6,8 +6,14 @@
 "use strict";
 
 import 'jquery';
-import 'randomcolor'
-import Plotly = require("plotly.js");
+import 'randomColor'
+import 'plotly.js'
+interface PlotlyStatic {
+    relayout(root: string, update: {}): void;
+    newPlot(root: string, traces: {}[], layout: {}): void;
+}
+declare var Plotly: PlotlyStatic;
+
 import d3 = require("d3");
 import {IndexDB} from  './index_db'
 import {md5} from './md5';
@@ -21,7 +27,7 @@ class Graph {
     private height: number;
     private traces: any = [];
     private index_db: IndexDB;
-    private layout: any = { barmode: "overlay" };
+    private layout: {} = { barmode: "overlay" };
     
     constructor(selector: string, index_db: IndexDB) {
         this.selector = selector;
@@ -64,8 +70,8 @@ class Graph {
         Plotly.relayout(this.plot_id, update);              
     };
     
-    protected request_point(event: any, path: string) {
-        this.index_db.getHist(path);
+    protected request_point(event: any, path: string, nodeId: number) {
+        this.index_db.getHist(path, nodeId);
     }
     
     protected plot_point(event: any, 
@@ -83,7 +89,8 @@ class Graph {
             marker: {
                 color: color
             },
-            label: path
+            label: path,
+            name: path
         }
         this.changeData();
     }
@@ -127,9 +134,9 @@ class Graph {
         }.bind(this), 50)
     }
     
-    
     protected changeData() {
         Plotly.newPlot(this.plot_id, (this.traces), this.layout);
+        $(window).trigger('redraw_colors')
     };
 };
 

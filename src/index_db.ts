@@ -7,58 +7,8 @@
 import 'jquery';
 import 'jquery-ui';
 import * as io from 'socket.io-client';
-import 'url-join';
- 
- var testPaths: string[] = [
-    'test_session/test_group/set_1/point1.df',
-    'test_session/test_group/set_1/point2.df',
-    'test_session/test_group/set_1/point3.df',
-    'test_session/test_group/set_2/point1.df',
-    'test_session/test_group/set_2/point4.df',
-    'test_session/test_group2/set_1/point6.df',
-    'test_session/test_group2/set_1/point3.df',
- ]
- 
-var testHist: { [key:string]:{ hist: number[], bins: number[] }; } = {};
-for (let path of testPaths) {
-    var hist: number[] = [];
-    var bins: number[] = [];
-    
-    for (let i = 0; i < 100; i++) {
-        hist[i] = Math.random();
-        bins[i] = i;    
-    }
-    
-    testHist[path] = {
-        hist: hist,
-        bins: bins
-    }
-}
- 
-var testMeta: { [key:string]:{}; } = {
-    'test_session/test_group/set_1/point1.df': {
-        meta: "Meta"
-    },
-    'test_session/test_group/set_1/point2.df': {
-        meta: "Meta"
-    },
-    'test_session/test_group/set_1/point3.df': {
-        meta: "Meta"
-    },
-    'test_session/test_group/set_2/point1.df': {
-        meta: "Meta"
-    },
-    'test_session/test_group/set_2/point4.df': {
-        meta: "Meta"
-    },
-    'test_session/test_group2/set_1/point6.df': {
-        meta: "Meta"
-    },
-    'test_session/test_group2/set_1/point3.df': {
-        meta: "Meta"
-    }
-}
- 
+import * as uj from 'url-join';
+
 class IndexDB {
     private host: string;
     private port: number;
@@ -92,20 +42,27 @@ class IndexDB {
     };
     
     updatePoints() {
-        $.getJSON(urljoin(this.makeUrl(), 'files'), function(data) {
+        $.getJSON((<any>uj).default(this.makeUrl(), 'files'), 
+            function(data) {
             $(window).trigger('paths_updated', [data]);
         });
     }
     
-    getHist(path: string) {
-        $.getJSON(urljoin(this.makeUrl(), 'hist', path), function(data) {
-            $(window).trigger('point_acquired', [data, path]);
+    getHist(path: string, nodeId: number) {
+        $.getJSON((<any>uj).default(this.makeUrl(), 'hist', path), 
+            function(data) {
+            if (typeof(data.error) !== 'undefined') {
+                $(window).trigger('point_not_acquired', [nodeId]);
+            } else {
+                $(window).trigger('point_acquired', [data, path]);
+            }
         });
     }
     
     getMeta(path: string) {
         
-        $.getJSON(urljoin(this.makeUrl(), 'meta', path), function(data) {
+        $.getJSON((<any>uj).default(this.makeUrl(), 'meta', path), 
+            function(data) {
             $(window).trigger('meta_acquired', [data, path]);
         });
     }

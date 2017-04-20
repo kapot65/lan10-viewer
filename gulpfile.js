@@ -7,21 +7,12 @@
 var gulp = require('gulp');
 var ts = require('gulp-typescript');
 var tsProject = ts.createProject("tsconfig.json");
-var gulp_jspm = require('gulp-jspm');
 var exec_simple = require('child_process').exec;
 
 gulp.task('default', function () {
     
     // place code for your default task here
     
-});
-
-gulp.task('jspm', function(){
-    
-    return gulp.src('public_html/js/main.js')
-        .pipe(gulp_jspm({minify: true}))
-        .pipe(gulp.dest('public_html/js'));
-
 });
 
 gulp.task('ts', function () {

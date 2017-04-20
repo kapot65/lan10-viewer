@@ -4,6 +4,7 @@ import base64
 from os import path
 from glob import glob
 from argparse import ArgumentParser
+from threading import Lock
 
 import dfparser
 import eventlet
@@ -43,64 +44,72 @@ def meta(fp):
         
     return jsonify(meta)
 
-    
+lock = Lock()  
 @app.route('/hist/<path:fp>')
 def hist(fp):
     
-    socketio.emit('progress', {'val': 0})
-    eventlet.sleep(0)
+    if lock.locked():
+        return jsonify({'error': 'busy'})
     
-    if not fp in db:
+    with lock:
+        socketio.emit('progress', {'val': 0})
+        eventlet.sleep(0)
         
-        fp_abs = path.join(args.points_dir, fp)
-        
-        if fp_abs.endswith('.rsb'):
-            meta, data = rsb_to_df({},fp_abs)
-        
-        elif fp_abs.endswith('.df'):
-            header, meta, data = dfparser.parse_from_file(fp_abs)
+        if not fp in db:
             
-        p = rsb_event_pb2.Point()
-        p.ParseFromString(data)
-        
-        sample_freq = meta['params']['sample_freq']
-        threshold = meta['process_params']['threshold']
-        
-        events_all = []
-        for ch in p.channels:
-            for i, block in enumerate(ch.blocks):
-                socketio.emit('progress', {'val': int((i/len(ch.blocks))*100)})
-                eventlet.sleep(0)
-                events = []
-                for event in block.events:
-                    data = np.frombuffer(event.data, np.int16)
-                    events.append(extract_amps_approx2(data, event.time, 
-                                                       threshold, 
-                                                       sample_freq)[0])
-                events = np.hstack(events)[0::2]
-                events_all.append(events)
+            fp_abs = path.join(args.points_dir, fp)
+            
+            if fp_abs.endswith('.rsb'):
+                meta, data = rsb_to_df({},fp_abs)
+            
+            elif fp_abs.endswith('.df'):
+                header, meta, data = dfparser.parse_from_file(fp_abs)
                 
-        events_all = np.hstack(events_all)
-        hist, bins = np.histogram(events_all, 120)
+            p = rsb_event_pb2.Point()
+            p.ParseFromString(data)
+            
+            sample_freq = meta['params']['sample_freq']
+            threshold = meta['process_params']['threshold']
+            
+            events_all = []
+            for ch in p.channels:
+                for i, block in enumerate(ch.blocks):
+                    socketio.emit('progress', 
+                                  {'val': int((i/len(ch.blocks))*100)})
+                    eventlet.sleep(0)
+                    events = []
+                    for event in block.events:
+                        data = np.frombuffer(event.data, np.int16)
+                        events.append(extract_amps_approx2(data, event.time, 
+                                                           threshold, 
+                                                           sample_freq)[0])
+                    events = np.hstack(events)[0::2]
+                    events_all.append(events)
+                    
+            events_all = np.hstack(events_all)
+            hist, bins = np.histogram(events_all, range=(0, 32768), bins=1000)
+            bins = (bins[:-1] + bins[1:])/2
+                   
+            hist = np.trim_zeros(hist)
+            bins = bins[:len(hist)]
+            
+            with db.transaction():
+                db[fp] = {'path': fp, 
+                          'hist': base64.b85encode(hist.astype(np.int32)
+                                  .tobytes()).decode(),
+                          'bins': base64.b85encode(bins.astype(np.float32)
+                                  .tobytes()).decode()
+                          }
+            
+        else:
+            data = eval(db[fp])
+            
+            hist = np.frombuffer(base64.b85decode(data['hist']), np.int32)
+            bins = np.frombuffer(base64.b85decode(data['bins']), np.float32)
         
-        
-        with db.transaction():
-            db[fp] = {'path': fp, 
-                      'hist': base64.b85encode(hist.astype(np.int32)
-                              .tobytes()).decode(),
-                      'bins': base64.b85encode(bins.astype(np.float32)
-                              .tobytes()).decode()
-                      }
-        
-    else:
-        data = eval(db[fp])
-        
-        hist = np.frombuffer(base64.b85decode(data['hist']), np.int32)
-        bins = np.frombuffer(base64.b85decode(data['bins']), np.float32)
-    
-    socketio.emit('progress', {'val': 100})
-    return jsonify({'hist': [int(h) for h in hist], 
-                    'bins': [float(b) for b in bins]})
+        socketio.emit('progress', {'val': 100})
+        return jsonify({'hist': [int(h) for h in hist], 
+                        'bins': [float(b) for b in bins]})
 
 
 def parse_args(): 

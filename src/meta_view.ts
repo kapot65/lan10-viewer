@@ -22,7 +22,7 @@ class MetaView {
     }
     
     protected show_meta(event: any, meta: {}, data: string) {
-        $(this.selector).JSONView(meta, {collapsed: true});
+        (<any>$)(this.selector).JSONView(meta, {collapsed: true});
     }
 }
 
