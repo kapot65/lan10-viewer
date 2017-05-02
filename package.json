@@ -9,7 +9,7 @@
     "browser"
   ],
   "scripts": {
-    "prepublish": "bower install && jspm install && gulp build"
+    "prepublish": "bower install && jspm registry create bower jspm-bower-endpoint && jspm install && gulp build"
   },
   "author": "kapot",
   "contributors": [],

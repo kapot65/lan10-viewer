@@ -85,13 +85,16 @@ def hist(fp):
                                                            sample_freq)[0])
                     events = np.hstack(events)[0::2]
                     events_all.append(events)
-                    
+                   
             events_all = np.hstack(events_all)
+
             hist, bins = np.histogram(events_all, range=(0, 32768), bins=1000)
             bins = (bins[:-1] + bins[1:])/2
                    
-            hist = np.trim_zeros(hist)
+            hist = np.trim_zeros(hist, 'b')
             bins = bins[:len(hist)]
+            hist = np.trim_zeros(hist, 'f')
+            bins = bins[len(bins) - len(hist):]
             
             with db.transaction():
                 db[fp] = {'path': fp, 
