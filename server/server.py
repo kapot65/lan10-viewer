@@ -20,7 +20,7 @@ if not utils_dir in sys.path: sys.path.append(utils_dir)
 del utils_dir
 
 import rsb_event_pb2
-from rsb import rsb_to_df
+from signal_utils.convert_utils import rsb_to_df
 from signal_utils.extract_utils import extract_amps_approx2
 
 app = Flask(__name__, static_url_path='', 

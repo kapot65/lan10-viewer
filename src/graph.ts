@@ -27,7 +27,7 @@ class Graph {
     private height: number;
     private traces: any = [];
     private index_db: IndexDB;
-    private layout: {} = { barmode: "overlay" };
+    private layout: {} = { barmode: "overlay", xaxis: {range: [0, 8000]}};
     
     constructor(selector: string, index_db: IndexDB) {
         this.selector = selector;
