@@ -100,7 +100,8 @@ class IndexTree {
     }
     
     protected pathsToTree(event: any, paths: Array<string>) {
-        for (let path of paths) {
+        let parthSorted = paths.sort();
+        for (let path of parthSorted) {
             this.addFileToTree(path);
         }
         

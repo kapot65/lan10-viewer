@@ -32,34 +32,6 @@ gulp.task('build-server', function () {
         if (err !== null) {
             throw new Error(stderr);
         };
-    
-        exec_simple('git submodule init', function (err, stdout, stderr) {
-
-            console.log(stdout);
-            if (err !== null) {
-                throw new Error(stderr);
-            };
-
-            exec_simple('pip3 install -r ' + 
-                        'server/counter-redirecter/requrements.txt --user', 
-                        function (err, stdout, stderr) {
-
-                console.log(stdout);
-                if (err !== null) {
-                    throw new Error(stderr);
-                };
-
-                exec_simple('cd server/counter-redirecter/configs && ' + 
-                            'protoc rsb_event.proto  --python_out ../utils ' + 
-                            '&& cd ../../../', function (err, stdout, stderr) {
-
-                    console.log(stdout);
-                    if (err !== null) {
-                        throw new Error(stderr);
-                    };
-                }); 
-            });
-        });
     });
 });
 
